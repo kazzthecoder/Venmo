@@ -72,12 +72,13 @@ public class JdbcUserDao implements UserDao {
         account.setUser_id(newUserId);
         account.setBalance(BigDecimal.valueOf(1000));
         String createAccountSql = "INSERT INTO account (user_id, balance) " +
-                "VALUES (?, ?, ?) RETURNING account_id;";
+                "VALUES (?, ?) RETURNING account_id;";
         Integer newAccountId;
         try {
             newAccountId = jdbcTemplate.queryForObject(createAccountSql, Integer.class, account.getUser_id(), account.getBalance());
             account.setAccount_id(newAccountId);
         } catch (DataAccessException e) {
+            System.out.println("error message" + e.getMessage());
             return false;
         }
         return true;
