@@ -34,13 +34,13 @@ CREATE TABLE account (
 );
 CREATE TABLE tenmo_transaction (
 	transaction_id SERIAL,
-	sender_id varchar(50) NOT NULL,
-	receiver_id varchar(50) NOT NULL,
+	sender_id int NOT NULL,
+	receiver_id int NOT NULL,
 	amount decimal(13,2) NOT NULL,
 	status varchar(10) NOT NULL,
 	CONSTRAINT PK_tenmo_transaction PRIMARY KEY (transaction_id),
-	CONSTRAINT FK_tenmo_transaction_account FOREIGN KEY (sender_id) REFERENCES account (account_id)
-	--CONSTRAINT FK_tenmo_transaction_account FOREIGN KEY (receiver_id) REFERENCES account (account_id)
+	CONSTRAINT FK_tenmo_transaction_account FOREIGN KEY (sender_id) REFERENCES account (account_id),
+	CONSTRAINT FK_transaction_account FOREIGN KEY (receiver_id) REFERENCES account (account_id)
 );
 
 
