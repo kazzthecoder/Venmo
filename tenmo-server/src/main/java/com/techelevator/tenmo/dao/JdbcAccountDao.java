@@ -1,12 +1,12 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Account;
-import com.techelevator.tenmo.model.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import javax.security.auth.login.AccountNotFoundException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -35,23 +35,43 @@ public class JdbcAccountDao {
         };
 
 
-
         public void deposit(Account account, BigDecimal amount) {
 
-
         };
-
-
 
         public void withdraw(Account account,BigDecimal amount){
 
         } ;
 
-
-
         public List<Account> getAccountsWithUsername(){
             return null;
-        };
+        }
+
+        @Override
+        public Account getById(int id) throws  AccountNotFoundException {
+            String sql = "SELECT acount_id, user_id, balance FROM account WHERE account_id = ?;";
+            SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, id);
+            if (rowSet.next()) {
+                return getById(id);
+            }
+            return null;                   /// just added. testing.
+        }
+
+        @Override
+        public BigDecimal getBalance (int account_id) throws AccountNotFoundException {
+            String sql = "SELECT balance FROM account WHERE account_id = ? ";
+            SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, account_id);
+            if (rowSet.next()) {
+                return getBalance(account_id);           }
+            throw new UsernameNotFoundException("User " + account_id + " was not found.");
+        }
+
+//        @Override
+//        public Account getBalance() {
+//            return null;
+//        }
+
+        ;
 
         private Account mapRowToAccount(SqlRowSet rs) {
             Account account = new Account();

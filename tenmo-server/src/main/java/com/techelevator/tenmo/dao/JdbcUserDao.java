@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import javax.security.auth.login.AccountNotFoundException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,9 +56,10 @@ public class JdbcUserDao implements UserDao {
         throw new UsernameNotFoundException("User " + username + " was not found.");
     }
 
+
+
     @Override
     public boolean create(String username, String password) {
-
         // create user
         String sql = "INSERT INTO tenmo_user (username, password_hash) VALUES (?, ?) RETURNING user_id";
         String password_hash = new BCryptPasswordEncoder().encode(password);
