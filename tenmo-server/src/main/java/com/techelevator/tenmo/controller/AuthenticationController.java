@@ -32,10 +32,10 @@ public class AuthenticationController {
     private UserDao userDao;
     private AccountDao accountDao;
 
-    public AuthenticationController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder ) {
+    public AuthenticationController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder, UserDao userDao ) {
         this.tokenProvider = tokenProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
-       ///// this.userDao = userDao;
+        this.userDao = userDao;
         /////cthis.accountDao = accountDao;
     }
 

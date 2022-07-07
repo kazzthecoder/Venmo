@@ -9,10 +9,6 @@ import java.util.List;
 public interface AccountDao {
 
     public Account getUserAccount(String username);
-    public void deposit(Account account, BigDecimal amount) ;
-    public void withdraw(Account account,BigDecimal amount) ;
-    public List<Account> getAccountsWithUsername();
-    public Account getById(int id) throws AccountNotFoundException;
-  //  public Account void getBalance();
-    BigDecimal getBalance(int id) throws AccountNotFoundException;   // just added. testing.
+   public Account getByAccountId(int account_id) throws AccountNotFoundException;
+    public BigDecimal getBalance(int account_id) throws AccountNotFoundException;   // just added. testing.
 }

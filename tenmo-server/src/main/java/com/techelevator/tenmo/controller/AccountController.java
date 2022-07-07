@@ -8,22 +8,30 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.security.auth.login.AccountNotFoundException;
+import java.math.BigDecimal;
 
+@RequestMapping("/accounts/")
 @RestController
 public class AccountController {
-    AccountDao accountDao;
 
+
+    private AccountDao accountDao;
+
+
+   public AccountController(AccountDao accountDao) {
+        this.accountDao = accountDao;
+   }
     //getUserAccount - GET
     //getAccountBalance - GET
 
-    @RequestMapping (path = "/{id}", method = RequestMethod.GET)
-    public Account getById (@PathVariable int id) throws AccountNotFoundException {
-        return accountDao.getById(id);
+    @RequestMapping (path = "/{account_id}", method = RequestMethod.GET)
+    public Account getByAccountId (@PathVariable int account_id) throws AccountNotFoundException {
+        return accountDao.getByAccountId(account_id);
     }
 
-    @RequestMapping (path = "/balance", method = RequestMethod.GET)
-    public void getBalance (@PathVariable int id) throws AccountNotFoundException {
-        return ;                                               // just added. testing.
+    @RequestMapping (path = "/{account_id}/balance", method = RequestMethod.GET)
+    public BigDecimal getBalance (@PathVariable int account_id) throws AccountNotFoundException {
+        return accountDao.getBalance(account_id);
     }
 
 

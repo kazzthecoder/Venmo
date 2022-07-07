@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.model.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,14 +11,13 @@ import javax.security.auth.login.AccountNotFoundException;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class JdbcAccountDao {
+@Component
+public class JdbcAccountDao implements AccountDao{
 
-    @Component
-    public class JdbcAccount implements AccountDao {
 
         private JdbcTemplate jdbcTemplate;
 
-        public JdbcAccount(JdbcTemplate jdbcTemplate) {
+        public JdbcAccountDao(JdbcTemplate jdbcTemplate) {
             this.jdbcTemplate = jdbcTemplate;
         }
 
@@ -48,21 +48,27 @@ public class JdbcAccountDao {
         }
 
         @Override
-        public Account getById(int id) throws  AccountNotFoundException {
-            String sql = "SELECT acount_id, user_id, balance FROM account WHERE account_id = ?;";
-            SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, id);
+        public Account getByAccountId(int account_id) throws AccountNotFoundException {
+            String sql = "SELECT account_id, user_id, balance FROM account WHERE account_id = ?;";
+            SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql,  account_id);
             if (rowSet.next()) {
-                return getById(id);
+                Account account = mapRowToAccount(rowSet);
+                return account;
+            } else {
+                throw new AccountNotFoundException("cannot find account with ID: " + account_id);
             }
-            return null;                   /// just added. testing.
+
+                /// just added. testing.
         }
 
         @Override
         public BigDecimal getBalance (int account_id) throws AccountNotFoundException {
-            String sql = "SELECT balance FROM account WHERE account_id = ? ";
+            String sql = "SELECT * FROM account WHERE account_id = ? ";
             SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, account_id);
             if (rowSet.next()) {
-                return getBalance(account_id);           }
+                Account account = mapRowToAccount(rowSet);
+                return account.getBalance();
+            }
             throw new UsernameNotFoundException("User " + account_id + " was not found.");
         }
 
@@ -82,4 +88,4 @@ public class JdbcAccountDao {
         }
     }
 
-}
+
