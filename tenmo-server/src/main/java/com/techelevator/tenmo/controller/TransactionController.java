@@ -4,11 +4,10 @@ package com.techelevator.tenmo.controller;
 import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.dao.TransactionDao;
 import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.model.InsufficientFundsException;
 import com.techelevator.tenmo.model.Transaction;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.AccountNotFoundException;
 import javax.validation.Valid;
@@ -24,15 +23,33 @@ import java.math.BigDecimal;
 //        I can't send a zero or negative amount.
 //        A Sending Transfer has an initial status of Approved.
 
-@RequestMapping ("/transactions/")
+@RequestMapping ("/transactions")
 @RestController
 public class TransactionController {
 
     private TransactionDao transactionDao;
+    private AccountDao accountDao;
 
-    public TransactionController (TransactionDao transactionDao) {
+    public TransactionController(TransactionDao transactionDao, AccountDao accountDao) {
         this.transactionDao = transactionDao;
+        this.accountDao = accountDao;
     }
+
+
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @RequestMapping(path = "/send", method = RequestMethod.POST)
+    public Transaction sendTransaction(@RequestBody Transaction transaction) throws InsufficientFundsException,  AccountNotFoundException {
+        if (accountDao.getBalance(transaction.getSender_id()).compareTo(transaction.getAmount()) > 0) {
+            return InsufficientFundsException
+
+        }
+
+    }
+}
+
+
+
 
 //    @RequestMapping (path = "/transfer", method = RequestMethod.POST)
 //    private Transaction transferByAccountId (@PathVariable int transaction_id, BigDecimal amount)     // do we need a throws method, complete this section... GET TRANSACTIONS
@@ -42,4 +59,4 @@ public class TransactionController {
 
 
 
-}
+

@@ -13,5 +13,6 @@ public interface AccountDao {
    public Account getByAccountId(int account_id) throws AccountNotFoundException;
     public BigDecimal getBalance(int account_id) throws AccountNotFoundException;
     public List<Account> ListRegisteredUsersToSendMoney (int account_id) throws AccountNotFoundException;
+    public Account updateBalance(Account account, BigDecimal amount) throws AccountNotFoundException; ;
 
 }

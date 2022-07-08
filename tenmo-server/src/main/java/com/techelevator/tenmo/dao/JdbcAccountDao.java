@@ -36,29 +36,23 @@ public class JdbcAccountDao implements AccountDao {
         }
         throw new UsernameNotFoundException("User " + username + " was not found.");
     }
-//
-//    public void deposit(Account account, BigDecimal amount) {           //update statement (UPDATE "UPDATE account SET = ?, account_id = ?, user_id = ?, balance = ?, WHERE account_id = ?;";
-//        String sql = "";
-//        SqlRowSet rowSet = jdbcTemplate.update(deposit(););
-//    }
-
-    ;
 
     public void withdraw(Account account, BigDecimal amount) {
 
     }
 
     @Override
-    public List<Account> ListRegisteredUsersToSendMoney (@PathVariable int account_id) throws AccountNotFoundException{
+    public List<Account> ListRegisteredUsersToSendMoney(int account_id) throws AccountNotFoundException {
         String sql = "SELECT account_id, user_id, balance FROM account WHERE account_id != ?;";
         List<Account> accounts = new ArrayList<>();
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, account_id);
-        if (rowSet.next()) {
-            Account account = mapRowToAccount(rowSet);
+        Account account = new Account();
+        while (rowSet.next()) {
+            account = mapRowToAccount(rowSet);
             accounts.add(account);
         }
         return accounts;
-        }
+    }
 
 
     @Override
@@ -76,7 +70,7 @@ public class JdbcAccountDao implements AccountDao {
 
     @Override
     public BigDecimal getBalance(int account_id) throws AccountNotFoundException {
-        String sql = "SELECT * FROM account WHERE account_id = ? ";
+        String sql = "SELECT account_id, user_id, balance FROM account WHERE account_id = ? ";
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, account_id);
         if (rowSet.next()) {
             Account account = mapRowToAccount(rowSet);
@@ -84,6 +78,19 @@ public class JdbcAccountDao implements AccountDao {
         }
         throw new UsernameNotFoundException("User " + account_id + " was not found.");
     }
+
+    @Override
+    public Account updateBalance(Account account, BigDecimal balance) throws AccountNotFoundException {
+        Account result = new Account();
+        result.setAccount_id(account.getAccount_id());
+        result.setUser_id(account.getUser_id());
+        result.setBalance(balance);
+        String sql = "UPDATE account SET balance = ? WHERE account_id =?";
+        jdbcTemplate.update(sql, balance, account.getAccount_id());
+        return result;
+        }
+
+
 
 
     private Account mapRowToAccount(SqlRowSet rowSet) {
