@@ -16,17 +16,18 @@ public class JdbcTransactionDao implements TransactionDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private int transaction_id;
-    private int sender_id;
-    private int receiver_id;
-    private BigDecimal amount;
-    private String status;
+    @Override
+    public int getTransactionID(Transaction transaction) {
+        return transaction.getTransaction_id();
+    }
+
 
     @Override
-    public Transaction sendTransaction(Transaction transaction) {
-        String sql = "INSERT INTO transactions (sender_id, receiver_id, amount, status) VALUES (DEFAULT, ?, ?, ?)";
-        return jdbcTemplate.update(sql,transaction.getSender_id(), transaction.getReceiver_id(), transaction.getAmount(), transaction.getStatus();
-    }
+    public int sendTransaction(Transaction transaction) {
+            String sql = "INSERT INTO transactions (sender_id, receiver_id, amount, status) VALUES (DEFAULT, ?, ?, ?) RETURNING reservation_id";
+            int transaction_id = jdbcTemplate.update(sql, transaction.getSender_id(), transaction.getReceiver_id(), transaction.getAmount(), transaction.getStatus());
+            return transaction_id;
+        }
 
 
    private Transaction mapRowToTransaction (SqlRowSet rowSet) {       // is this what we need? should it be SET or GET? we used set methods in Jdbc Account Dao

@@ -2,9 +2,10 @@ package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Transaction;
 
-public interface TransactionDao {
+public interface TransactionDao  {
 
-    Transaction sendTransaction(Transaction transaction);
+    int sendTransaction(Transaction transaction);
+    int getTransactionID(Transaction transaction);
 
 
 

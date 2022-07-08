@@ -38,13 +38,12 @@ public class TransactionController {
 
 
     @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(path = "/send", method = RequestMethod.POST)
-    public Transaction sendTransaction(@RequestBody Transaction transaction) throws InsufficientFundsException,  AccountNotFoundException {
-        if (accountDao.getBalance(transaction.getSender_id()).compareTo(transaction.getAmount()) > 0) {
-            return InsufficientFundsException
-
+    @RequestMapping(path = "", method = RequestMethod.POST)
+    public int sendTransaction(@RequestBody Transaction transaction) throws InsufficientFundsException,  AccountNotFoundException {
+        if (accountDao.getBalance(transaction.getSender_id()).compareTo(transaction.getAmount()) < 0) {
+            throw new InsufficientFundsException();
         }
-
+        return transaction.getTransaction_id();
     }
 }
 
