@@ -38,11 +38,6 @@ public class AccountController {
     public Account updateBalance(@RequestBody Account account, @PathVariable int account_id) throws AccountNotFoundException {
        return accountDao.updateBalance(account, account.getBalance());
 
-
-
-
-
-
     }
 
     @RequestMapping (path = "/{account_id}/users", method = RequestMethod.GET)

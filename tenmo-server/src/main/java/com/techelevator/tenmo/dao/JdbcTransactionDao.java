@@ -1,12 +1,12 @@
 package com.techelevator.tenmo.dao;
 
-import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transaction;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class JdbcTransactionDao implements TransactionDao {
@@ -17,16 +17,35 @@ public class JdbcTransactionDao implements TransactionDao {
     }
 
     @Override
-    public int getTransactionID(Transaction transaction) {
-        return transaction.getTransaction_id();
+    public List<Transaction> seeTransactions (int account_id) {
+        String sql = "select * from tenmo_transaction where sender_id = ? or receiver_id = ?;";
+        List<Transaction> seeTransactions = new ArrayList<>();
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, account_id, account_id);
+        Transaction transaction = new Transaction();
+        while (rowSet.next()) {
+            transaction = mapRowToTransaction(rowSet);
+            seeTransactions.add(transaction);
+        }
+        return seeTransactions;
     }
 
 
     @Override
-    public int sendTransaction(Transaction transaction) {
-            String sql = "INSERT INTO transactions (sender_id, receiver_id, amount, status) VALUES (DEFAULT, ?, ?, ?) RETURNING reservation_id";
-            int transaction_id = jdbcTemplate.update(sql, transaction.getSender_id(), transaction.getReceiver_id(), transaction.getAmount(), transaction.getStatus());
-            return transaction_id;
+    public Transaction getTransactionById (int transaction_id) {
+        String sql = "select transaction_id, sender_id, receiver_id, amount, status from tenmo_transaction where transaction_id = ?";
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, transaction_id);
+        Transaction transaction = new Transaction();
+        if (rowSet.next()) {
+            transaction = mapRowToTransaction(rowSet);
+        }
+        return  transaction;
+    }
+
+
+    @Override
+    public void sendTransaction(Transaction transaction) {
+            String sql = "INSERT INTO tenmo_transaction (sender_id, receiver_id, amount, status) VALUES (?, ?, ?, ?)";
+     jdbcTemplate.update(sql, transaction.getSender_id(), transaction.getReceiver_id(), transaction.getAmount(), "Approved");
         }
 
 
