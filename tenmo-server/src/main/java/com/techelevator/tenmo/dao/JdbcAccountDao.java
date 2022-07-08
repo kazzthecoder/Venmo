@@ -20,6 +20,7 @@ public class JdbcAccountDao implements AccountDao {
     private JdbcTemplate jdbcTemplate;
 
     public JdbcAccountDao(JdbcTemplate jdbcTemplate) {
+
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -34,15 +35,12 @@ public class JdbcAccountDao implements AccountDao {
             return mapRowToAccount(rowSet);
         }
         throw new UsernameNotFoundException("User " + username + " was not found.");
-
     }
-
-    ;
-
-
-    public void deposit(Account account, BigDecimal amount) {
-
-    }
+//
+//    public void deposit(Account account, BigDecimal amount) {           //update statement (UPDATE "UPDATE account SET = ?, account_id = ?, user_id = ?, balance = ?, WHERE account_id = ?;";
+//        String sql = "";
+//        SqlRowSet rowSet = jdbcTemplate.update(deposit(););
+//    }
 
     ;
 
