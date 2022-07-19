@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import com.techelevator.tenmo.dao.AccountDao;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -25,6 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
  * Controller to authenticate users.
  */
 @RestController
+@PreAuthorize("isAuthenticated()")
 public class AuthenticationController {
 
     private final TokenProvider tokenProvider;
@@ -36,7 +38,6 @@ public class AuthenticationController {
         this.tokenProvider = tokenProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.userDao = userDao;
-        /////cthis.accountDao = accountDao;
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
